@@ -56,6 +56,15 @@
 
         <li>
 
+            <a class="apidocElementLiA" href="#apidoc.element.ejs-mate.ejs-mate">
+            function <span class="apidocSignatureSpan"></span>ejs-mate
+            <span class="apidocSignatureSpan">(file, options, fn)</span>
+            </a>
+
+        </li>
+
+        <li>
+
             <a class="apidocElementLiA" href="#apidoc.element.ejs-mate.block">
             function <span class="apidocSignatureSpan">ejs-mate.</span>block
             <span class="apidocSignatureSpan">(name, html)</span>
@@ -96,6 +105,100 @@
 
 <div class="apidocSectionDiv">
 <h1><a href="#apidoc.module.ejs-mate" id="apidoc.module.ejs-mate">module ejs-mate</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.ejs-mate.ejs-mate" id="apidoc.element.ejs-mate.ejs-mate">
+        function <span class="apidocSignatureSpan"></span>ejs-mate
+        <span class="apidocSignatureSpan">(file, options, fn)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function renderFile(file, options, fn){
+
+  // Express used to set options.locals for us, but now we do it ourselves
+  // (EJS does some __proto__ magic to expose these funcs/values in the template)
+  if (!options.locals) {
+    options.locals = {};
+  }
+
+  if (!options.locals.blocks) {
+    // one set of blocks no matter how often we recurse
+    var blocks = {};
+    options.locals.blocks = blocks;
+    options.locals.block = block.bind(blocks);
+  }
+
+  // override locals for layout/partial bound to current options
+  options.locals.layout  = layout.bind(options);
+  options.locals.partial = partial.bind(options);
+
+  ejs.renderFile(file, options, function(err, html) {
+    if (err) {
+      return fn(err,html);
+    }
+
+    var layout = options.locals._layoutFile;
+
+    // for backward-compatibility, allow options to
+    // set a default layout file for the view or the app
+    // (NB:- not called `layout` any more so it doesn't
+    // conflict with the layout() function)
+    if (layout === undefined) {
+      layout = options._layoutFile;
+    }
+
+    if (layout) {
+
+      // use default extension
+      var engine = options.settings['view engine'] || 'ejs',
+          desiredExt = '.'+engine;
+
+      // apply default layout if only "true" was set
+      if (layout === true) {
+        layout = path.sep + 'layout' + desiredExt;
+      }
+      if (extname(layout) !== desiredExt) {
+        layout += desiredExt;
+      }
+
+      // clear to make sure we don't recurse forever (layouts can be nested)
+      delete options.locals._layoutFile;
+      delete options._layoutFile;
+      // make sure caching works inside ejs.renderFile/render
+      delete options.filename;
+
+      if (layout.length &gt; 0) {
+        var views = options.settings.views;
+        var l = layout;
+
+        if (!Array.isArray(views)) {
+          views = [views];
+        }
+
+        for (var i = 0; i &lt; views.length; i++) {
+          layout = join(views[i], l);
+
+          // use the first found layout
+          if (exists(layout)) {
+            break;
+          }
+        }
+      }
+
+      // now recurse and use the current result as `body` in the layout:
+      options.locals.body = html;
+      renderFile(layout, options, fn);
+    } else {
+      // no layout, just do the default:
+      fn(null, html);
+    }
+  });
+
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
 
 
     <h2>
