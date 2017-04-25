@@ -1,6 +1,6 @@
 # npmdoc-ejs-mate
 
-#### api documentation for  [ejs-mate (v2.3.0)](https://github.com/JacksonTian/ejs-mate)  [![npm package](https://img.shields.io/npm/v/npmdoc-ejs-mate.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-ejs-mate) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-ejs-mate.svg)](https://travis-ci.org/npmdoc/node-npmdoc-ejs-mate)
+#### basic api documentation for  [ejs-mate (v2.3.0)](https://github.com/JacksonTian/ejs-mate)  [![npm package](https://img.shields.io/npm/v/npmdoc-ejs-mate.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-ejs-mate) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-ejs-mate.svg)](https://travis-ci.org/npmdoc/node-npmdoc-ejs-mate)
 
 #### Express 4.x locals for layout, partial.
 
@@ -88,7 +88,8 @@
     "scripts": {
         "test": "make test"
     },
-    "version": "2.3.0"
+    "version": "2.3.0",
+    "bin": {}
 }
 ```
 
